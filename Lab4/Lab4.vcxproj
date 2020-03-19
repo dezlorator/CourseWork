@@ -137,6 +137,8 @@
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="Memento.cpp" />
+    <ClCompile Include="MementoManager.cpp" />
     <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="Rectangle.cpp" />
   </ItemGroup>
@@ -145,6 +147,8 @@
     <ClInclude Include="Ellipse.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="Memento.h" />
+    <ClInclude Include="MementoManager.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

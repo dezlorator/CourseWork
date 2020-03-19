@@ -4,6 +4,7 @@
 #include "Ellipse.h"
 #include "Manager.h"
 #include <math.h>
+#include "MementoManager.h"
 
 namespace Lab4 {
 
@@ -13,16 +14,19 @@ namespace Lab4 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
+		String^ path_to_memento_folder = Directory::GetCurrentDirectory() + "\\" + "Memento";
+		String^ file_name = "\\Memento.txt";
 		Manager^ manager;
+		MementoManager^ memento_manager;
 		int timer_counter = 0;
 		System::Drawing::Point start_point, end_point;
-		bool rect = false, ellipse = false, triangle = false;
 	private: System::Windows::Forms::Button^ EndWorkWithObjectbtn;
 	private: System::Windows::Forms::Button^ MoveLeftbtn;
 	private: System::Windows::Forms::Button^ MoveRigthbtn;
@@ -43,15 +47,18 @@ namespace Lab4 {
 		MyForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+
+			if (!Directory::Exists(path_to_memento_folder))
+			{
+				Directory::CreateDirectory(path_to_memento_folder);
+			}
+			if (!File::Exists(path_to_memento_folder + file_name))
+			{
+				File::Create(path_to_memento_folder + file_name);
+			}
 		}
 
 	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
 		~MyForm()
 		{
 			if (components)
@@ -84,7 +91,7 @@ namespace Lab4 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -473,128 +480,132 @@ namespace Lab4 {
 
 		}
 #pragma endregion
-	private: System::Void AddRectanglebtn_Click(System::Object^ sender, System::EventArgs^ e) 
+	private: System::Void AddRectanglebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		start_point = System::Drawing::Point(Convert::ToInt32(XRectangleTextBox->Text), 
+		String^ a = System::IO::Directory::GetCurrentDirectory();
+		start_point = System::Drawing::Point(Convert::ToInt32(XRectangleTextBox->Text),
 			Convert::ToInt32(YRectangleTextBox->Text));
 		ExistedItemsCheckedListBox->Items->Add(manager->Draw(gcnew MyRectangle
-		(System::Convert::ToInt32(WidthRectangleTextBox->Text), System::Convert::ToInt32(HeightRectangleTextBox->Text), 
+		(System::Convert::ToInt32(WidthRectangleTextBox->Text), System::Convert::ToInt32(HeightRectangleTextBox->Text),
 			start_point, System::Drawing::Color::Black)));
 		Redraw();
 	}
-private: System::Void AddElipsebtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	start_point = System::Drawing::Point(Convert::ToInt32(XElipseTextBox->Text),
-		Convert::ToInt32(YElipseTextBox->Text));
-	ExistedItemsCheckedListBox->Items->Add(manager->Draw(gcnew MyEllipse
-	(System::Convert::ToInt32(WidthElipseTextBox->Text), System::Convert::ToInt32(HeightElipseTextBox->Text),
-		start_point, System::Drawing::Color::Black)));
-	Redraw();
-}
-	   private: void Redraw()
-	   {
-		   if (WithoutTraceCheckBox->Checked) manager->ClearBitmap(System::Drawing::Color::White);
-		   manager->Paint();
-		   pictureBox1->Image = manager->GetBitmap();
-	   }
-private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager = gcnew Manager(this->pictureBox1->Size.Width, this->pictureBox1->Size.Height, false);
-}
-private: System::Void ExistedItemsCheckedListBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) 
-{
-	if (ExistedItemsCheckedListBox->SelectedIndex != -1)
-		manager->Select(ExistedItemsCheckedListBox->Items[ExistedItemsCheckedListBox->SelectedIndex]->ToString());
-}
-
-private: System::Void EndWorkWithObjectbtn_Click(System::Object^ sender, System::EventArgs^ e)
-{
-	if (ExistedItemsCheckedListBox->SelectedIndex != -1)
+	private: System::Void AddElipsebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		ExistedItemsCheckedListBox->Items->RemoveAt(ExistedItemsCheckedListBox->SelectedIndex);
-		manager->Delete();
+		start_point = System::Drawing::Point(Convert::ToInt32(XElipseTextBox->Text),
+			Convert::ToInt32(YElipseTextBox->Text));
+		ExistedItemsCheckedListBox->Items->Add(manager->Draw(gcnew MyEllipse
+		(System::Convert::ToInt32(WidthElipseTextBox->Text), System::Convert::ToInt32(HeightElipseTextBox->Text),
+			start_point, System::Drawing::Color::Black)));
 		Redraw();
 	}
-}
-private: System::Void MoveLeftbtn_Click(System::Object^ sender, System::EventArgs^ e)
-{
-	manager->Move(-5, 0, true);
-	Redraw();
-}
-private: System::Void MoveUpbtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Move(0, -5, true);
-	Redraw();
-}
-private: System::Void MoveRigthbtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Move(5, 0, true);
-	Redraw();
-}
-private: System::Void MoveDownbtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Move(0, 5, true);
-	Redraw();
-}
-private: System::Void IncreaseSizebtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Deformation(1.5);
-	Redraw();
-}
-private: System::Void ReduceSize_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Deformation(0.5);
-	Redraw();
-}
-
-private: System::Void CombineFiguresbtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	List<String^>^ figure_names = gcnew List<String^>();
-	List<int> indexes_to_delete;
-	int counter = 0;
-	for (int i = 0; i < ExistedItemsCheckedListBox->Items->Count; i++)
+	private: void Redraw()
 	{
-		if (ExistedItemsCheckedListBox->GetItemChecked(i))
+		if (WithoutTraceCheckBox->Checked) manager->ClearBitmap(System::Drawing::Color::White);
+		manager->Paint();
+		pictureBox1->Image = manager->GetBitmap();
+	}
+	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager = Manager::GetInstance(this->pictureBox1->Size.Width, this->pictureBox1->Size.Height, false);
+		memento_manager = gcnew MementoManager(manager);
+	}
+	private: System::Void ExistedItemsCheckedListBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
+	{
+		if (ExistedItemsCheckedListBox->SelectedIndex != -1)
 		{
-			figure_names->Add(ExistedItemsCheckedListBox->Items[i]->ToString());
-			indexes_to_delete.Add(i);
-			counter++;
+			manager->Select(ExistedItemsCheckedListBox->Items[ExistedItemsCheckedListBox->SelectedIndex]->ToString());
 		}
 	}
-	if (counter > 0)
+
+	private: System::Void EndWorkWithObjectbtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		for (int i = indexes_to_delete.Count - 1; i >= 0; i--)
+		if (ExistedItemsCheckedListBox->SelectedIndex != -1)
 		{
-			ExistedItemsCheckedListBox->Items->RemoveAt(indexes_to_delete[i]);
+			ExistedItemsCheckedListBox->Items->RemoveAt(ExistedItemsCheckedListBox->SelectedIndex);
+			manager->Delete();
+			Redraw();
 		}
-		ExistedItemsCheckedListBox->Items->Add(manager->MakeAggregate(figure_names, counter));
+	}
+	private: System::Void MoveLeftbtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Move(-5, 0, true);
 		Redraw();
 	}
-}
-private: System::Void Restorebtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->Restore();
-	Redraw();
-}
-private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e) 
-{
+	private: System::Void MoveUpbtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Move(0, -5, true);
+		Redraw();
+	}
+	private: System::Void MoveRigthbtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Move(5, 0, true);
+		Redraw();
+	}
+	private: System::Void MoveDownbtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Move(0, 5, true);
+		Redraw();
+	}
+	private: System::Void IncreaseSizebtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Deformation(1.5);
+		Redraw();
+	}
+	private: System::Void ReduceSize_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->Deformation(0.5);
+		Redraw();
+	}
 
-}
-private: System::Void HideShowbtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	if (manager->IsVisible())
+	private: System::Void CombineFiguresbtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager->SetVisible(false);
+		List<String^>^ figure_names = gcnew List<String^>();
+		List<int> indexes_to_delete;
+		int counter = 0;
+		for (int i = 0; i < ExistedItemsCheckedListBox->Items->Count; i++)
+		{
+			if (ExistedItemsCheckedListBox->GetItemChecked(i))
+			{
+				figure_names->Add(ExistedItemsCheckedListBox->Items[i]->ToString());
+				indexes_to_delete.Add(i);
+				counter++;
+			}
+		}
+		if (counter > 0)
+		{
+			for (int i = indexes_to_delete.Count - 1; i >= 0; i--)
+			{
+				ExistedItemsCheckedListBox->Items->RemoveAt(indexes_to_delete[i]);
+			}
+			ExistedItemsCheckedListBox->Items->Add(manager->MakeAggregate(figure_names, counter));
+			Redraw();
+		}
 	}
-	else
+	private: System::Void Restorebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager->SetVisible(true); 
+		manager->Restore();
+		Redraw();
 	}
-	Redraw();
-}
-private: System::Void MoveByTracebtn_Click(System::Object^ sender, System::EventArgs^ e) 
-{
-	manager->MoveByTrace(pictureBox1);
-}
-};
+	private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e)
+	{
+
+	}
+	private: System::Void HideShowbtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		if (manager->IsVisible())
+		{
+			manager->SetVisible(false);
+		}
+		else
+		{
+			manager->SetVisible(true);
+		}
+		Redraw();
+	}
+	private: System::Void MoveByTracebtn_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		manager->MoveByTrace(pictureBox1);
+	}
+	};
 }

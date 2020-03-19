@@ -1,14 +1,18 @@
+#pragma once
 #include "Figure.h"
 #include "Aggregate.h"
+#include "Memento.h"
 ref class Manager{
 	int curr_figure_indx, counter;
 	Bitmap^ bitmap;
 	Graphics^ g;
-public:
-	List<Figure^>^ figures = gcnew List<Figure^>();
-	bool checkCollisions;
+	static Manager^ manager;
 	Manager(int bitmap_width, int bitmap_height, bool collisionCheck);
+	List<Figure^>^ figures = gcnew List<Figure^>();
+public:
+	bool checkCollisions;
 	void MoveByTrace(PictureBox^ pictureBox);
+	static Manager^ GetInstance(int bitmap_width, int bitmap_height, bool collisionCheck);
 	Graphics^ GetGraphics();
 	Bitmap^ GetBitmap();
 	int GetCurrIndx();
@@ -27,5 +31,6 @@ public:
 	void Delete();
 	void Paint();
 	void Select(String^ figure_name);
-
+	Memento^ CreateMemento();
+	void RestoreState(Memento^ memento);
 };

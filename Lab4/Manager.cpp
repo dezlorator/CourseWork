@@ -248,3 +248,26 @@ void Manager::MoveByTrace(PictureBox^ pictureBox)
 		}
 	}
 }
+Manager^ Manager::GetInstance(int bitmap_width, int bitmap_height, bool collisionCheck)
+{
+	if (manager == nullptr)
+	{
+		manager = gcnew Manager(bitmap_width, bitmap_height, collisionCheck);
+	}
+
+	return manager;
+}
+Memento^ Manager::CreateMemento()
+{
+	return gcnew Memento(figures, curr_figure_indx, counter);
+}
+void Manager::RestoreState(Memento^ memento)
+{
+	curr_figure_indx = memento->GetCurrentIndex();
+	counter = memento->GetCounter();
+	figures->Clear();
+	for (int i = 0; i < memento->GetCounter(); i++)
+	{
+		figures->Add(memento->GetFigures()[i]);
+	}
+}
