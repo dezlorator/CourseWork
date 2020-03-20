@@ -9,7 +9,7 @@ private:
 	int Height, InitialHeight;
 public:
 	MyRectangle(int width, int height, Point p, Color c);
-	Figure^ GetCopy() override;
+	Figure^ CopyFigure() override;
 
 	int MaxX() override;
 	int MaxY() override;
@@ -20,7 +20,7 @@ public:
 	void Draw(System::Drawing::Graphics^ g) override;
 	void Move(int dx, int dy) override;
 	void Restore() override;
-	void Deformation(float coefficient) override;
+	void ChangeSize(float coefficient) override;
 	String^ GetShapeName() override;
 
 	void setWidth(int W);

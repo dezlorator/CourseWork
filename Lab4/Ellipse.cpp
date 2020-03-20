@@ -2,57 +2,56 @@
 
 MyEllipse::MyEllipse(int width, int height, Point p, Color color)
 {
-	InitialColor = color;
-	CurrentColor = color;
+	start_color = color;
+	current_color = color;
 	InitialHeight = height;
 	InitialWidth = width;
 	Height = height;
 	Width = width;
-	CurrentBasePoint = p;
-	InitialBasePoint = p;
+	current_position = p;
+	start_point = p;
 }
-Figure^ MyEllipse::GetCopy()
+Figure^ MyEllipse::CopyFigure()
 {
-	MyEllipse^ f = gcnew MyEllipse(Width, Height, CurrentBasePoint, CurrentColor);
+	MyEllipse^ f = gcnew MyEllipse(Width, Height, current_position, current_color);
 	return f;
 }
 
 int MyEllipse::MaxX()
 {
-	return CurrentBasePoint.X + Width;
+	return current_position.X + Width;
 }
 int MyEllipse::MaxY()
 {
-	return CurrentBasePoint.Y + Height;
+	return current_position.Y + Height;
 }
 int MyEllipse::MinX()
 {
-	return CurrentBasePoint.X;
+	return current_position.X;
 }
 int MyEllipse::MinY()
 {
-	return CurrentBasePoint.Y;
+	return current_position.Y;
 }
 
 void MyEllipse::Draw(System::Drawing::Graphics^ g)
 {
-	g->FillEllipse(gcnew SolidBrush(CurrentColor), CurrentBasePoint.X, CurrentBasePoint.Y, Width, Height);
-	g->DrawEllipse(gcnew Pen(System::Drawing::Color::Black), CurrentBasePoint.X, CurrentBasePoint.Y, Width, Height);
-
+	g->FillEllipse(gcnew SolidBrush(current_color), current_position.X, current_position.Y, Width, Height);
+	g->DrawEllipse(gcnew Pen(System::Drawing::Color::Black), current_position.X, current_position.Y, Width, Height);
 }
 void MyEllipse::Move(int dx, int dy)
 {
-	CurrentBasePoint.X += dx;
-	CurrentBasePoint.Y += dy;
+	current_position.X += dx;
+	current_position.Y += dy;
 }
 void MyEllipse::Restore()
 {
-	CurrentBasePoint = InitialBasePoint;
+	current_position = start_point;
 	Width = InitialWidth;
 	Height = InitialHeight;
-	CurrentColor = InitialColor;
+	current_color = start_color;
 }
-void MyEllipse::Deformation(float coefficient)
+void MyEllipse::ChangeSize(float coefficient)
 {
 	Width = Width * coefficient;
 	Height = Height * coefficient;

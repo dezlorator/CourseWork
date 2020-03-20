@@ -142,7 +142,7 @@ namespace Lab4 {
 			// 
 			// pictureBox1
 			// 
-			this->pictureBox1->Location = System::Drawing::Point(12, 12);
+			this->pictureBox1->Location = System::Drawing::Point(13, 13);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(891, 274);
 			this->pictureBox1->TabIndex = 0;

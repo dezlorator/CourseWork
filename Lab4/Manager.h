@@ -3,7 +3,7 @@
 #include "Aggregate.h"
 #include "Memento.h"
 ref class Manager{
-	int curr_figure_indx, counter;
+	int current_figure_index, counter;
 	Bitmap^ bitmap;
 	Graphics^ g;
 	static Manager^ manager;

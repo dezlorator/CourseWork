@@ -3,8 +3,8 @@
 Aggregate::Aggregate(List<Figure^>^ aggregate)
 {
 	AggregateList = aggregate;
-	InitialBasePoint = System::Drawing::Point(MinX(), MinY());
-	CurrentBasePoint = InitialBasePoint;
+	start_point = System::Drawing::Point(MinX(), MinY());
+	current_position = start_point;
 }
 
 void Aggregate::AddToAgregate(Figure^ f)
@@ -25,8 +25,8 @@ void Aggregate::Move(int dx, int dy)
 	{
 		this->AggregateList[i]->Move(dx, dy);
 	}
-	CurrentBasePoint.X = CurrentBasePoint.X + dx;
-	CurrentBasePoint.Y = CurrentBasePoint.Y + dy;
+	current_position.X = current_position.X + dx;
+	current_position.Y = current_position.Y + dy;
 
 }
 void Aggregate::Restore()
@@ -36,16 +36,16 @@ void Aggregate::Restore()
 		this->AggregateList[i]->Restore();
 	}
 }
-void Aggregate::Deformation(float delta)
+void Aggregate::ChangeSize(float delta)
 {
 	for (int i = 0; i < this->AggregateList->Count; i++)
 	{
-		this->AggregateList[i]->Deformation(delta);
+		this->AggregateList[i]->ChangeSize(delta);
 	}
 }
 void Aggregate::SetColor(Color c)
 {
-	CurrentColor = c;
+	current_color = c;
 	for (int i = 0; i < this->AggregateList->Count; i++)
 	{
 		this->AggregateList[i]->SetColor(c);
@@ -105,12 +105,12 @@ String^ Aggregate::GetShapeName()
 {
 	return "Aggregate";
 }
-Figure^ Aggregate::GetCopy()
+Figure^ Aggregate::CopyFigure()
 {
 	List<Figure^>^ agreg_copy = gcnew List<Figure^>();
 	for (int i = 0; i < this->AggregateList->Count; i++)
 	{
-		agreg_copy->Add(AggregateList[i]->GetCopy());
+		agreg_copy->Add(AggregateList[i]->CopyFigure());
 	}
 	return gcnew Aggregate(agreg_copy);
 }

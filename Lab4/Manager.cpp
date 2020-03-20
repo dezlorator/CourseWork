@@ -4,7 +4,7 @@ Manager::Manager(int bitmap_width, int bitmap_height, bool collisionCheck)
 {
 	bitmap = gcnew Bitmap(bitmap_width, bitmap_height);
 	g = Graphics::FromImage(bitmap);
-	curr_figure_indx = -1;
+	current_figure_index = -1;
 	counter = 0;
 	checkCollisions = collisionCheck;
 }
@@ -18,7 +18,7 @@ Bitmap^ Manager::GetBitmap()
 }
 int Manager::GetCurrIndx()
 {
-	return curr_figure_indx;
+	return current_figure_index;
 }
 int Manager::GetCounter()
 {
@@ -30,19 +30,23 @@ void Manager::ClearBitmap(Color c)
 }
 bool Manager::Collision()
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
 		for (int i = 0; i < counter; i++)
 		{
-			if (curr_figure_indx != i)
+			if (current_figure_index != i)
 			{
-				if ((*figures)[i]->MaxY() > (*figures)[curr_figure_indx]->MinY() &&
-					(*figures)[i]->MinY() <(*figures)[curr_figure_indx]->MaxY() &&
-					(*figures)[i]->MinX() < (*figures)[curr_figure_indx]->MaxX() &&
-					(*figures)[i]->MaxX() >(*figures)[curr_figure_indx]->MinX()) return true;
+				if ((*figures)[i]->MaxY() > (*figures)[current_figure_index]->MinY() &&
+					(*figures)[i]->MinY() <(*figures)[current_figure_index]->MaxY() &&
+					(*figures)[i]->MinX() < (*figures)[current_figure_index]->MaxX() &&
+					(*figures)[i]->MaxX() >(*figures)[current_figure_index]->MinX()) 
+				{
+					return true;
+				}
 			}
 		}
 	}
+
 	return false;
 }
 String^ Manager::Draw(Figure^ f)
@@ -55,7 +59,7 @@ String^ Manager::Draw(Figure^ f)
 }
 void Manager::Move(int dx, int dy, bool createTrace)
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
 		if (Boundaries(dx, dy))
 		{
@@ -63,22 +67,22 @@ void Manager::Move(int dx, int dy, bool createTrace)
 			{
 				if (dy == -5)
 				{
-					(*figures)[curr_figure_indx]->trace.Add(1);
+					(*figures)[current_figure_index]->trace.Add(1);
 				}
 				else if (dx == 5)
 				{
-					(*figures)[curr_figure_indx]->trace.Add(2);
+					(*figures)[current_figure_index]->trace.Add(2);
 				}
 				else if (dy == 5)
 				{
-					(*figures)[curr_figure_indx]->trace.Add(3);
+					(*figures)[current_figure_index]->trace.Add(3);
 				}
 				else
 				{
-					(*figures)[curr_figure_indx]->trace.Add(4);
+					(*figures)[current_figure_index]->trace.Add(4);
 				}
 			}
-			(*figures)[curr_figure_indx]->Move(dx, dy);
+			(*figures)[current_figure_index]->Move(dx, dy);
 			if (Collision())
 			{
 				SetColor(System::Drawing::Color::Blue);
@@ -88,39 +92,39 @@ void Manager::Move(int dx, int dy, bool createTrace)
 }
 void Manager::Restore()
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		(*figures)[curr_figure_indx]->Restore();
+		(*figures)[current_figure_index]->Restore();
 	}
 }
 void Manager::Deformation(float coefficient)
 {
-	if (curr_figure_indx!=-1)
+	if (current_figure_index!=-1)
 	{
-		(*figures)[curr_figure_indx]->Deformation(coefficient);
+		(*figures)[current_figure_index]->ChangeSize(coefficient);
 	}	
 }
 void Manager::SetColor(Color c)
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		(*figures)[curr_figure_indx]->SetColor(c);
+		(*figures)[current_figure_index]->SetColor(c);
 	}
 }
 void Manager::SetVisible(bool flag)
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		(*figures)[curr_figure_indx]->Visible = flag;
+		(*figures)[current_figure_index]->is_visible = flag;
 	}
 }
 
 bool Manager::IsVisible()
 {
 	bool visible = false;
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		visible=(*figures)[curr_figure_indx]->Visible;
+		visible=(*figures)[current_figure_index]->is_visible;
 	}
 	return visible;
 }
@@ -134,7 +138,7 @@ String^ Manager::MakeAggregate(List<String^>^ figure_names, int num_selected)
 		{
 			if ((*figures)[i]->GetName() == (*figure_names)[j])
 			{
-				aggregate->Add((*figures)[i]->GetCopy());
+				aggregate->Add((*figures)[i]->CopyFigure());
 			}
 		}
 	}
@@ -144,7 +148,7 @@ String^ Manager::MakeAggregate(List<String^>^ figure_names, int num_selected)
 		{
 			if ((*figures)[i]->GetName() == (*figure_names)[j])
 			{
-				curr_figure_indx = i;
+				current_figure_index = i;
 				Delete();
 			}
 		}
@@ -153,10 +157,10 @@ String^ Manager::MakeAggregate(List<String^>^ figure_names, int num_selected)
 }
 void Manager::Delete()
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		(*figures).RemoveAt(curr_figure_indx);
-		curr_figure_indx = -1;
+		(*figures).RemoveAt(current_figure_index);
+		current_figure_index = -1;
 		counter--;
 	}
 }
@@ -165,7 +169,7 @@ void Manager::Paint()
 	if (counter != 0){
 		for (int i = 0; i < counter; i++)
 		{
-			if ((*figures)[i]->Visible) (*figures)[i]->Draw(g);
+			if ((*figures)[i]->is_visible) (*figures)[i]->Draw(g);
 		}
 	}
 }
@@ -177,36 +181,36 @@ void Manager::Select(String^ figure_name)
 		if ((*figures)[i]->GetName() == figure_name)
 		{
 			indx = i;
-			(*figures)[i]->Selected = true;
+			(*figures)[i]->is_selected = true;
 		}
 		else
 		{
-			(*figures)[i]->Selected = false;
+			(*figures)[i]->is_selected = false;
 		}
 	}
-	curr_figure_indx = indx;
+	current_figure_index = indx;
 }
 
 bool Manager::Boundaries(int x, int y)
 {
-	if (curr_figure_indx != -1)
+	if (current_figure_index != -1)
 	{
-		if ((*figures)[curr_figure_indx]->CurrentBasePoint.X + x > bitmap->Width)
+		if ((*figures)[current_figure_index]->current_position.X + x > bitmap->Width)
 		{
 			this->SetColor(System::Drawing::Color::Blue);
 			return false;
 		}
-		else if ((*figures)[curr_figure_indx]->CurrentBasePoint.X + x < 0)
+		else if ((*figures)[current_figure_index]->current_position.X + x < 0)
 		{
 			this->SetColor(System::Drawing::Color::Blue);
 			return false;
 		}
-		else if ((*figures)[curr_figure_indx]->CurrentBasePoint.Y + y > bitmap->Height)
+		else if ((*figures)[current_figure_index]->current_position.Y + y > bitmap->Height)
 		{
 			this->SetColor(System::Drawing::Color::Blue);
 			return false;
 		}
-		else if ((*figures)[curr_figure_indx]->CurrentBasePoint.Y + y < 0)
+		else if ((*figures)[current_figure_index]->current_position.Y + y < 0)
 		{
 			this->SetColor(System::Drawing::Color::Blue);
 			return false;
@@ -217,9 +221,9 @@ bool Manager::Boundaries(int x, int y)
 }
 void Manager::MoveByTrace(PictureBox^ pictureBox)
 {
-	for (int i = 0; i < (*figures)[curr_figure_indx]->trace.Count; i++)
+	for (int i = 0; i < (*figures)[current_figure_index]->trace.Count; i++)
 	{
-		switch ((*figures)[curr_figure_indx]->trace[i])
+		switch ((*figures)[current_figure_index]->trace[i])
 		{
 		case 1:
 			this->Move(0, -5, false);
@@ -259,11 +263,11 @@ Manager^ Manager::GetInstance(int bitmap_width, int bitmap_height, bool collisio
 }
 Memento^ Manager::CreateMemento()
 {
-	return gcnew Memento(figures, curr_figure_indx, counter);
+	return gcnew Memento(figures, current_figure_index, counter);
 }
 void Manager::RestoreState(Memento^ memento)
 {
-	curr_figure_indx = memento->GetCurrentIndex();
+	current_figure_index = memento->GetCurrentIndex();
 	counter = memento->GetCounter();
 	figures->Clear();
 	for (int i = 0; i < memento->GetCounter(); i++)

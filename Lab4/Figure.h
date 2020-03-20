@@ -19,15 +19,15 @@ using namespace System;
 [Serializable]
 ref class Figure abstract{
 protected:
-	Color CurrentColor, InitialColor;
+	Color current_color, start_color;
 	String^ Name;
-	Point InitialBasePoint;
+	Point start_point;
 public:
-	bool Selected = true;
-	bool Visible = true;
-	Point CurrentBasePoint;
+	bool is_selected = true;
+	bool is_visible = true;
+	Point current_position;
 
-	virtual Figure^ GetCopy() = 0;
+	virtual Figure^ CopyFigure() = 0;
 	List<int> trace;
 	virtual int MaxX() = 0;
 	virtual int MaxY() = 0;
@@ -38,7 +38,7 @@ public:
 	virtual void Draw(System::Drawing::Graphics^ g) = 0;
 	virtual void Move(int dx, int dy) = 0;
 	virtual void Restore() = 0;
-	virtual void Deformation(float coefficient) = 0;
+	virtual void ChangeSize(float coefficient) = 0;
 	virtual void SetColor(Color c);
 	virtual String^ GetShapeName();
 	Color GetColor();

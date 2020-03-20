@@ -2,11 +2,11 @@
 
 void Figure::SetColor(Color c)
 {
-	CurrentColor = c;
+	current_color = c;
 }
 Color Figure::GetColor()
 {
-	return CurrentColor;
+	return current_color;
 }
 
 String^ Figure::GetName()

@@ -2,58 +2,58 @@
 
 MyRectangle::MyRectangle(int width, int height, Point p, Color color)
 {
-	InitialColor = color;
-	CurrentColor = color;
+	start_color = color;
+	current_color = color;
 	InitialHeight = height;
 	InitialWidth = width;
 	Height = height;
 	Width = width;
-	CurrentBasePoint = p;
-	InitialBasePoint = p;
+	current_position = p;
+	start_point = p;
 }
-Figure^ MyRectangle::GetCopy()
+Figure^ MyRectangle::CopyFigure()
 {
-	MyRectangle^ f = gcnew MyRectangle(Width, Height, CurrentBasePoint, CurrentColor);
+	MyRectangle^ f = gcnew MyRectangle(Width, Height, current_position, current_color);
 	return f;
 }
 
 int MyRectangle::MaxX()
 {
-	return CurrentBasePoint.X + Width;
+	return current_position.X + Width;
 }
 int MyRectangle::MaxY()
 {
-	return CurrentBasePoint.Y + Height;
+	return current_position.Y + Height;
 }
 int MyRectangle::MinX()
 {
-	return CurrentBasePoint.X;
+	return current_position.X;
 }
 int MyRectangle::MinY()
 {
-	return CurrentBasePoint.Y;
+	return current_position.Y;
 }
 
 void MyRectangle::Draw(System::Drawing::Graphics^ g)
 {
 	Size^ size = gcnew Size(Width, Height);
-	g->FillRectangle(gcnew SolidBrush(CurrentColor), CurrentBasePoint.X, CurrentBasePoint.Y, Width, Height);
-	g->DrawRectangle(gcnew Pen(System::Drawing::Color::Black), CurrentBasePoint.X, CurrentBasePoint.Y, Width, Height);
+	g->FillRectangle(gcnew SolidBrush(current_color), current_position.X, current_position.Y, Width, Height);
+	g->DrawRectangle(gcnew Pen(System::Drawing::Color::Black), current_position.X, current_position.Y, Width, Height);
 
 }
 void MyRectangle::Move(int dx, int dy)
 {
-	CurrentBasePoint.X += dx;
-	CurrentBasePoint.Y += dy;
+	current_position.X += dx;
+	current_position.Y += dy;
 }
 void MyRectangle::Restore()
 {
-	CurrentBasePoint = InitialBasePoint;
+	current_position = start_point;
 	Width = InitialWidth;
 	Height = InitialHeight;
-	CurrentColor = InitialColor;
+	current_color = start_color;
 }
-void MyRectangle::Deformation(float coefficient)
+void MyRectangle::ChangeSize(float coefficient)
 {
 	Width = Width * coefficient;
 	Height = Height * coefficient;
