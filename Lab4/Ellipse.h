@@ -5,8 +5,8 @@ using namespace System;
 ref class MyEllipse : public Figure
 {
 private:
-	int Width, InitialWidth;
-	int Height, InitialHeight;
+	int width, start_width;
+	int height, start_height;
 public:
 	MyEllipse(int width, int height, Point p, Color c);
 	Figure^ CopyFigure() override;

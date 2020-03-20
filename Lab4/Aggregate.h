@@ -8,7 +8,7 @@ using namespace System;
 ref class Aggregate : public Figure
 {
 private:
-	List<Figure^>^ AggregateList = gcnew List<Figure^>();
+	List<Figure^>^ figures_list = gcnew List<Figure^>();
 public:
 
 	Aggregate(List<Figure^>^ aggregate);

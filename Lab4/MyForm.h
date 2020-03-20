@@ -528,19 +528,19 @@ namespace Lab4 {
 	private: void Redraw()
 	{
 		if (WithoutTraceCheckBox->Checked) manager->ClearBitmap(System::Drawing::Color::White);
-		manager->Paint();
+		manager->DrawScene();
 		pictureBox1->Image = manager->GetBitmap();
 	}
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager = Manager::GetInstance(this->pictureBox1->Size.Width, this->pictureBox1->Size.Height, false);
+		manager = Manager::GetInstance(this->pictureBox1->Size.Width, this->pictureBox1->Size.Height);
 		memento_manager = gcnew MementoManager(manager, path_to_memento_folder + file_name);
 	}
 	private: System::Void ExistedItemsCheckedListBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
 	{
 		if (ExistedItemsCheckedListBox->SelectedIndex != -1)
 		{
-			manager->Select(ExistedItemsCheckedListBox->Items[ExistedItemsCheckedListBox->SelectedIndex]->ToString());
+			manager->SelectFigure(ExistedItemsCheckedListBox->Items[ExistedItemsCheckedListBox->SelectedIndex]->ToString());
 		}
 	}
 
@@ -575,12 +575,12 @@ namespace Lab4 {
 	}
 	private: System::Void IncreaseSizebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager->Deformation(1.5);
+		manager->ChangeFigureSize(1.5);
 		Redraw();
 	}
 	private: System::Void ReduceSize_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager->Deformation(0.5);
+		manager->ChangeFigureSize(0.5);
 		Redraw();
 	}
 
@@ -610,7 +610,7 @@ namespace Lab4 {
 	}
 	private: System::Void Restorebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
-		manager->Restore();
+		manager->RestoreStartState();
 		Redraw();
 	}
 	private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e)

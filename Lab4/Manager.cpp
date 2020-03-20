@@ -1,34 +1,21 @@
 #include "Manager.h"
 
-Manager::Manager(int bitmap_width, int bitmap_height, bool collisionCheck)
+Manager::Manager(int bitmap_width, int bitmap_height)
 {
 	bitmap = gcnew Bitmap(bitmap_width, bitmap_height);
-	g = Graphics::FromImage(bitmap);
+	graphics = Graphics::FromImage(bitmap);
 	current_figure_index = -1;
 	counter = 0;
-	checkCollisions = collisionCheck;
-}
-Graphics^ Manager::GetGraphics()
-{
-	return g;
 }
 Bitmap^ Manager::GetBitmap()
 {
 	return bitmap;
 }
-int Manager::GetCurrIndx()
-{
-	return current_figure_index;
-}
-int Manager::GetCounter()
-{
-	return counter;
-}
 void Manager::ClearBitmap(Color c)
 {
-	g->Clear(c);
+	graphics->Clear(c);
 }
-bool Manager::Collision()
+bool Manager::IsFigureMoveToAnotherFigure()
 {
 	if (current_figure_index != -1)
 	{
@@ -61,7 +48,7 @@ void Manager::Move(int dx, int dy, bool createTrace)
 {
 	if (current_figure_index != -1)
 	{
-		if (Boundaries(dx, dy))
+		if (IsFigureMoveToTheBorder(dx, dy))
 		{
 			if (createTrace)
 			{
@@ -83,21 +70,21 @@ void Manager::Move(int dx, int dy, bool createTrace)
 				}
 			}
 			(*figures)[current_figure_index]->Move(dx, dy);
-			if (Collision())
+			if (IsFigureMoveToAnotherFigure())
 			{
 				SetColor(System::Drawing::Color::Blue);
 			}
 		}
 	}
 }
-void Manager::Restore()
+void Manager::RestoreStartState()
 {
 	if (current_figure_index != -1)
 	{
 		(*figures)[current_figure_index]->Restore();
 	}
 }
-void Manager::Deformation(float coefficient)
+void Manager::ChangeFigureSize(float coefficient)
 {
 	if (current_figure_index!=-1)
 	{
@@ -164,16 +151,16 @@ void Manager::Delete()
 		counter--;
 	}
 }
-void Manager::Paint()
+void Manager::DrawScene()
 {
 	if (counter != 0){
 		for (int i = 0; i < counter; i++)
 		{
-			if ((*figures)[i]->is_visible) (*figures)[i]->Draw(g);
+			if ((*figures)[i]->is_visible) (*figures)[i]->Draw(graphics);
 		}
 	}
 }
-void Manager::Select(String^ figure_name)
+void Manager::SelectFigure(String^ figure_name)
 {
 	int indx = -1;
 	for (int i = 0; i < this->counter; i++)
@@ -191,7 +178,7 @@ void Manager::Select(String^ figure_name)
 	current_figure_index = indx;
 }
 
-bool Manager::Boundaries(int x, int y)
+bool Manager::IsFigureMoveToTheBorder(int x, int y)
 {
 	if (current_figure_index != -1)
 	{
@@ -228,35 +215,35 @@ void Manager::MoveByTrace(PictureBox^ pictureBox)
 		case 1:
 			this->Move(0, -5, false);
 			this->ClearBitmap(System::Drawing::Color::White);
-			this->Paint();
+			this->DrawScene();
 			pictureBox->Image = this->GetBitmap();
 			break;
 		case 2:
 			this->Move(5, 0, false);
 			this->ClearBitmap(System::Drawing::Color::White);
-			this->Paint();
+			this->DrawScene();
 			pictureBox->Image = this->GetBitmap();
 			break;
 		case 3:
 			this->Move(0, 5, false);
 			this->ClearBitmap(System::Drawing::Color::White);
-			this->Paint();
+			this->DrawScene();
 			pictureBox->Image = this->GetBitmap();
 			break;
 		case 4:
 			this->Move(-5, 0, false);
 			this->ClearBitmap(System::Drawing::Color::White);
-			this->Paint();
+			this->DrawScene();
 			pictureBox->Image = this->GetBitmap();
 			break;
 		}
 	}
 }
-Manager^ Manager::GetInstance(int bitmap_width, int bitmap_height, bool collisionCheck)
+Manager^ Manager::GetInstance(int bitmap_width, int bitmap_height)
 {
 	if (manager == nullptr)
 	{
-		manager = gcnew Manager(bitmap_width, bitmap_height, collisionCheck);
+		manager = gcnew Manager(bitmap_width, bitmap_height);
 	}
 
 	return manager;
