@@ -20,7 +20,7 @@ using namespace System;
 ref class Figure abstract{
 protected:
 	Color current_color, start_color;
-	String^ Name;
+	String^ name;
 	Point start_point;
 public:
 	bool is_selected = true;
@@ -38,7 +38,7 @@ public:
 	virtual void Draw(System::Drawing::Graphics^ g) = 0;
 	virtual void Move(int dx, int dy) = 0;
 	virtual void Restore() = 0;
-	virtual void ChangeSize(float coefficient) = 0;
+	virtual void ChangeSize(float value) = 0;
 	virtual void SetColor(Color c);
 	virtual String^ GetShapeName();
 	Color GetColor();

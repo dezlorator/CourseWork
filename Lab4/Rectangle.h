@@ -5,8 +5,8 @@ using namespace System;
 ref class MyRectangle : public Figure
 {
 private:
-	int Width, InitialWidth;
-	int Height, InitialHeight;
+	int width, start_width;
+	int height, start_height;
 public:
 	MyRectangle(int width, int height, Point p, Color c);
 	Figure^ CopyFigure() override;
@@ -20,7 +20,7 @@ public:
 	void Draw(System::Drawing::Graphics^ g) override;
 	void Move(int dx, int dy) override;
 	void Restore() override;
-	void ChangeSize(float coefficient) override;
+	void ChangeSize(float value) override;
 	String^ GetShapeName() override;
 
 	void setWidth(int W);

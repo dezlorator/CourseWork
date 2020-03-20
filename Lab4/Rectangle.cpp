@@ -4,26 +4,26 @@ MyRectangle::MyRectangle(int width, int height, Point p, Color color)
 {
 	start_color = color;
 	current_color = color;
-	InitialHeight = height;
-	InitialWidth = width;
-	Height = height;
-	Width = width;
+	start_height = height;
+	start_width = width;
+	height = height;
+	width = width;
 	current_position = p;
 	start_point = p;
 }
 Figure^ MyRectangle::CopyFigure()
 {
-	MyRectangle^ f = gcnew MyRectangle(Width, Height, current_position, current_color);
+	MyRectangle^ f = gcnew MyRectangle(width, height, current_position, current_color);
 	return f;
 }
 
 int MyRectangle::MaxX()
 {
-	return current_position.X + Width;
+	return current_position.X + width;
 }
 int MyRectangle::MaxY()
 {
-	return current_position.Y + Height;
+	return current_position.Y + height;
 }
 int MyRectangle::MinX()
 {
@@ -36,9 +36,9 @@ int MyRectangle::MinY()
 
 void MyRectangle::Draw(System::Drawing::Graphics^ g)
 {
-	Size^ size = gcnew Size(Width, Height);
-	g->FillRectangle(gcnew SolidBrush(current_color), current_position.X, current_position.Y, Width, Height);
-	g->DrawRectangle(gcnew Pen(System::Drawing::Color::Black), current_position.X, current_position.Y, Width, Height);
+	Size^ size = gcnew Size(width, height);
+	g->FillRectangle(gcnew SolidBrush(current_color), current_position.X, current_position.Y, width, height);
+	g->DrawRectangle(gcnew Pen(System::Drawing::Color::Black), current_position.X, current_position.Y, width, height);
 
 }
 void MyRectangle::Move(int dx, int dy)
@@ -49,32 +49,32 @@ void MyRectangle::Move(int dx, int dy)
 void MyRectangle::Restore()
 {
 	current_position = start_point;
-	Width = InitialWidth;
-	Height = InitialHeight;
+	width = start_width;
+	height = start_height;
 	current_color = start_color;
 }
 void MyRectangle::ChangeSize(float coefficient)
 {
-	Width = Width * coefficient;
-	Height = Height * coefficient;
+	width = width * coefficient;
+	height = height * coefficient;
 }
 
 int MyRectangle::GetWidth()
 {
-	return Width;
+	return width;
 }
 int MyRectangle::GetHeight()
 {
-	return Height;
+	return height;
 }
 
 void MyRectangle::setWidth(int W)
 {
-	Width = W;
+	width = W;
 }
 void MyRectangle::setHeight(int H)
 {
-	Height = H;
+	height = H;
 }
 
 String^ MyRectangle::GetShapeName()

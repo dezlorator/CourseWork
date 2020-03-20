@@ -11,11 +11,11 @@ Color Figure::GetColor()
 
 String^ Figure::GetName()
 {
-	return Name;
+	return name;
 }
 void Figure::SetName(String^ name)
 {
-	Name = name;
+	name = name;
 }
 String^ Figure::GetShapeName()
 {

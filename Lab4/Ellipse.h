@@ -20,7 +20,7 @@ public:
 	void Draw(System::Drawing::Graphics^ g) override;
 	void Move(int dx, int dy) override;
 	void Restore() override;
-	void ChangeSize(float coefficient) override;
+	void ChangeSize(float value) override;
 	String^ GetShapeName() override;
 
 	void setWidth(int W);
