@@ -40,6 +40,8 @@ namespace Lab4 {
 	private: System::Windows::Forms::Button^ HideShowbtn;
 	private: System::Windows::Forms::RadioButton^ WithoutTraceCheckBox;
 	private: System::Windows::Forms::Button^ MoveByTracebtn;
+	private: System::Windows::Forms::Button^ SerializeObject;
+	private: System::Windows::Forms::Button^ Deserialize;
 
 
 	private: System::Windows::Forms::CheckedListBox^ ExistedItemsCheckedListBox;
@@ -133,6 +135,8 @@ namespace Lab4 {
 			this->HideShowbtn = (gcnew System::Windows::Forms::Button());
 			this->WithoutTraceCheckBox = (gcnew System::Windows::Forms::RadioButton());
 			this->MoveByTracebtn = (gcnew System::Windows::Forms::Button());
+			this->SerializeObject = (gcnew System::Windows::Forms::Button());
+			this->Deserialize = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -433,11 +437,33 @@ namespace Lab4 {
 			this->MoveByTracebtn->UseVisualStyleBackColor = true;
 			this->MoveByTracebtn->Click += gcnew System::EventHandler(this, &MyForm::MoveByTracebtn_Click);
 			// 
+			// SerializeObject
+			// 
+			this->SerializeObject->Location = System::Drawing::Point(695, 413);
+			this->SerializeObject->Name = L"SerializeObject";
+			this->SerializeObject->Size = System::Drawing::Size(208, 39);
+			this->SerializeObject->TabIndex = 33;
+			this->SerializeObject->Text = L"Serialize";
+			this->SerializeObject->UseVisualStyleBackColor = true;
+			this->SerializeObject->Click += gcnew System::EventHandler(this, &MyForm::SerializeObject_Click);
+			// 
+			// Deserialize
+			// 
+			this->Deserialize->Location = System::Drawing::Point(695, 457);
+			this->Deserialize->Name = L"Deserialize";
+			this->Deserialize->Size = System::Drawing::Size(208, 39);
+			this->Deserialize->TabIndex = 34;
+			this->Deserialize->Text = L"Deserialize";
+			this->Deserialize->UseVisualStyleBackColor = true;
+			this->Deserialize->Click += gcnew System::EventHandler(this, &MyForm::Deserialize_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1130, 503);
+			this->Controls->Add(this->Deserialize);
+			this->Controls->Add(this->SerializeObject);
 			this->Controls->Add(this->MoveByTracebtn);
 			this->Controls->Add(this->WithoutTraceCheckBox);
 			this->Controls->Add(this->HideShowbtn);
@@ -508,7 +534,7 @@ namespace Lab4 {
 	private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e)
 	{
 		manager = Manager::GetInstance(this->pictureBox1->Size.Width, this->pictureBox1->Size.Height, false);
-		memento_manager = gcnew MementoManager(manager);
+		memento_manager = gcnew MementoManager(manager, path_to_memento_folder + file_name);
 	}
 	private: System::Void ExistedItemsCheckedListBox_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e)
 	{
@@ -606,6 +632,15 @@ namespace Lab4 {
 	private: System::Void MoveByTracebtn_Click(System::Object^ sender, System::EventArgs^ e)
 	{
 		manager->MoveByTrace(pictureBox1);
+	}
+	private: System::Void SerializeObject_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		memento_manager->CreateMemento();
+	}
+	private: System::Void Deserialize_Click(System::Object^ sender, System::EventArgs^ e)
+	{
+		memento_manager->UndoChanges();
+		Redraw();
 	}
 	};
 }

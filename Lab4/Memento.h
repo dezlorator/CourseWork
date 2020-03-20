@@ -2,6 +2,9 @@
 #include "Figure.h";
 #include "Aggregate.h"
 
+using namespace System;
+
+[Serializable]
 ref class Memento
 {
 	List<Figure^>^ figures = gcnew List<Figure^>();

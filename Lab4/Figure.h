@@ -14,7 +14,9 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 using namespace std;
+using namespace System;
 
+[Serializable]
 ref class Figure abstract{
 protected:
 	Color CurrentColor, InitialColor;

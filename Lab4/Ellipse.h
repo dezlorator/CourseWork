@@ -1,5 +1,7 @@
 #include "Figure.h"
+using namespace System;
 
+[Serializable]
 ref class MyEllipse : public Figure
 {
 private:

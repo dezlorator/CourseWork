@@ -2,7 +2,9 @@
 #ifndef Aggregate_H
 #define Aggregate_H
 #include "Figure.h"
+using namespace System;
 
+[Serializable]
 ref class Aggregate : public Figure
 {
 private:
